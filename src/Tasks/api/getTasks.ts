@@ -1,13 +1,15 @@
+import { AxiosResponse } from 'axios'
 import api from '../../shared/api'
 import { CustomResponse } from '../../shared/types'
+import { formatResponse } from '../../shared/utils'
 import { Task } from '../types'
 
-export default async function getTasks(): Promise<CustomResponse<Task[]>> {
-  const response = await api.get('/tasks')
+export default async function getTasks(
+  title?: string
+): Promise<CustomResponse<Task[]>> {
+  const response: AxiosResponse<Task[]> = await api.get(
+    `/tasks${title ? '?title=' + title : ''}`
+  )
 
-  return {
-    data: response.data,
-    status: response.status >= 200 || response.status < 300,
-    message: response.statusText,
-  }
+  return formatResponse(response)
 }

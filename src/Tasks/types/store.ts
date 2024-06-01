@@ -10,7 +10,7 @@ export type TaskState = {
 export type TaskGetters = Record<string, never>
 
 export type TaskActions = {
-  fetchTasks(): void
+  fetchTasks(title?: string): void
   addTask(newTask: Omit<Task, 'id'>): void
   deleteTask(taskId: string): void
   editTask(task: Task): void

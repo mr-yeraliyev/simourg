@@ -15,8 +15,8 @@ const useTasks = defineStore<
   TaskActions
 >('useTasks', {
   actions: {
-    async fetchTasks() {
-      const { data } = await getTasks()
+    async fetchTasks(title?: string) {
+      const { data } = await getTasks(title)
       data && this.setTasks(data)
     },
     async addTask(newTask: Omit<Task, 'id'>) {

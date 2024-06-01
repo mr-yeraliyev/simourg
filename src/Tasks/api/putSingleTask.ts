@@ -1,15 +1,13 @@
+import { AxiosResponse } from 'axios'
 import api from '../../shared/api'
 import { CustomResponse } from '../../shared/types'
+import { formatResponse } from '../../shared/utils'
 import { Task } from '../types'
 
 export default async function putSingleTask(
   task: Task
 ): Promise<CustomResponse<Task>> {
-  const { data, status, statusText } = await api.put(`/tasks/${task.id}`, task)
-  const ok = status >= 200 && status < 300
-  return {
-    data: data,
-    status: ok,
-    message: statusText,
-  }
+  const response: AxiosResponse<Task> = await api.put(`/tasks/${task.id}`, task)
+
+  return formatResponse(response)
 }

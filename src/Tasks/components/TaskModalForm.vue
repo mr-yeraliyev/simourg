@@ -2,11 +2,22 @@
   <div class="modal">
     <div class="modal__backdrop" @click="close"></div>
     <div class="modal__content">
-      <button class="modal__close-button" @click="close">✖️</button>
-      <h3 class="modal__title">Добавить задачу</h3>
+      <custom-button class="modal__close-button" @click="close"
+        ><svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M1.5 1.5L16.5 16.5" stroke="white" stroke-width="1.5" />
+          <path d="M16.5 1.5L1.5 16.5" stroke="white" stroke-width="1.5" />
+        </svg>
+      </custom-button>
+      <h3 class="modal__title"></h3>
       <form @submit.prevent="saveTask">
         <label class="modal__label">
-          Название
+          НАЗВАНИЕ
           <input
             v-model="task.title"
             type="text"
@@ -15,7 +26,7 @@
           />
         </label>
         <label class="modal__label">
-          Описание
+          ОПИСАНИЕ
           <textarea
             v-model="task.description"
             class="modal__textarea"
@@ -23,7 +34,7 @@
           ></textarea>
         </label>
         <label class="modal__label">
-          Срок выполнения
+          СРОК ВЫПОЛНЕНИЕ
           <input
             v-model="task.dueDate"
             type="date"
@@ -31,7 +42,9 @@
             required
           />
         </label>
-        <button type="submit" class="modal__save-button">СОХРАНИТЬ</button>
+        <div class="modal__footer">
+          <custom-button type="submit">СОХРАНИТЬ</custom-button>
+        </div>
       </form>
     </div>
   </div>
@@ -42,6 +55,8 @@ import { defineEmits, onMounted, ref } from 'vue'
 import { useTasks } from '../stores'
 import { storeToRefs } from 'pinia'
 import { Task } from '../types'
+
+import CustomButton from '../../shared/components/CustomButton.vue'
 
 const emit = defineEmits(['close', 'save'])
 
@@ -106,10 +121,6 @@ onMounted(() => {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
   }
 
   &__title {
@@ -120,11 +131,12 @@ onMounted(() => {
   &__label {
     display: block;
     margin-bottom: 15px;
+    color: #8d8d8d;
   }
 
   &__input,
   &__textarea {
-    width: 100%;
+    width: 95%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -134,20 +146,9 @@ onMounted(() => {
     resize: none;
     height: 80px;
   }
-
-  &__save-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #6777ef;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #5563d4;
-    }
+  &__footer {
+    display: flex;
+    justify-content: center;
   }
 }
 </style>

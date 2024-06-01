@@ -2,21 +2,22 @@
   <div class="task-list">
     <div class="task-list__header">
       <input
-        v-model="searchQuery"
         type="text"
         placeholder="Поиск"
         class="task-list__search-input"
+        @input="handleTaskSearch($event)"
       />
-      <button class="task-list__add-task-button" @click="handleAddNewTaskClick">
+      <custom-button @click="handleAddNewTaskClick">
         ДОБАВИТЬ ЗАДАЧУ
-      </button>
+      </custom-button>
     </div>
     <SingleTask
-      v-for="task in filteredTasks"
+      v-for="task in tasks"
       :key="task.id"
       :task="task"
       @edit="handleEditClick"
       @delete="handleDeleteClick"
+      @change-status="handleCompleteStatusChange"
     />
   </div>
   <Modal
@@ -27,24 +28,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import Modal from './TaskModalForm.vue'
-import SingleTask from './SingleTask.vue'
-import { useTasks } from '../stores'
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
+
+import { useTasks } from '../stores'
 import { Task } from '../types'
 
+import Modal from './TaskModalForm.vue'
+import SingleTask from './SingleTask.vue'
+import CustomButton from '../../shared/components/CustomButton.vue'
+
 const store = useTasks()
-
-const searchQuery = ref('')
-const showModal = ref(false)
 const { tasks, singleTask } = storeToRefs(store)
+const showModal = ref(false)
 
-const filteredTasks = computed(() => {
-  return tasks.value.filter((task) =>
-    task.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
-})
+const handleTaskSearch = (event: Event) => {
+  store.fetchTasks(event?.target?.value)
+}
 
 const handleModalFormSave = async (
   formValues: Omit<Task, 'id' | 'completed'>
@@ -65,8 +65,14 @@ const handleEditClick = (task: Task) => {
   store.setSingleTask(task)
   showModal.value = true
 }
-const handleDeleteClick = (task: Task) => {
-  store.deleteTask(task.id + '')
+
+const handleDeleteClick = (taskId: string) => {
+  window.confirm('Вы уверены, что хотите удалить эту задачу?') &&
+    store.deleteTask(taskId)
+}
+
+const handleCompleteStatusChange = (task: Task, completed: boolean) => {
+  store.editTask({ ...task, completed })
 }
 </script>
 
@@ -89,20 +95,6 @@ const handleDeleteClick = (task: Task) => {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
-
-  &__add-task-button {
-    display: block;
-    padding: 10px;
-    background-color: #6777ef;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #5563d4;
-    }
   }
 }
 </style>

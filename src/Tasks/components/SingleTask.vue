@@ -7,21 +7,23 @@
   >
     <input
       type="checkbox"
-      v-model="task.completed"
-      @click.stop
+      @click="handleTaskCompleteClick"
       class="task-list__checkbox"
     />
     <div class="task-list__details">
-      <div class="task-list__title">{{ task.title }}</div>
+      <div
+        :class="[
+          'task-list__title',
+          { 'task-list__title--completed': task.completed },
+        ]"
+      >
+        {{ task.title }}
+      </div>
       <div class="task-list__date">{{ formatDate(String(task.dueDate)) }}</div>
     </div>
     <div class="task-list__actions">
-      <button class="task-list__button" @click="handleDeleteClick">
-        УДАЛИТЬ
-      </button>
-      <button class="task-list__button" @click="handleEditClick">
-        РЕДАКТИРОВАТЬ
-      </button>
+      <custom-button @click="handleDeleteClick"> УДАЛИТЬ </custom-button>
+      <custom-button @click="handleEditClick"> РЕДАКТИРОВАТЬ </custom-button>
     </div>
   </div>
 </template>
@@ -31,6 +33,14 @@ import { PropType } from 'vue'
 import { Task } from '../types'
 import { formatDate } from '../../shared/utils'
 
+import CustomButton from '../../shared/components/CustomButton.vue'
+
+type SingleTaskEmits = {
+  delete: [id: string | number]
+  edit: [task: Task]
+  changeStatus: [task: Task, completed: boolean]
+}
+
 const props = defineProps({
   task: {
     type: Object as PropType<Task>,
@@ -38,16 +48,19 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['delete', 'edit'])
+const emit = defineEmits<SingleTaskEmits>()
 
 const handleDeleteClick = () => {
-  if (window.confirm('Are you sure you want to delete this task?')) {
-    emit('delete', props.task)
-  }
+  emit('delete', props.task.id)
 }
 
 const handleEditClick = () => {
   emit('edit', props.task)
+}
+
+const handleTaskCompleteClick = (payload: MouseEvent) => {
+  const checked = payload?.target?.checked
+  emit('changeStatus', props.task, checked)
 }
 
 const isTaskDeprecated = (task: Task): boolean => {
@@ -56,52 +69,38 @@ const isTaskDeprecated = (task: Task): boolean => {
 </script>
 
 <style scoped lang="scss">
-.task-list__item {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #f4f4f4;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.task-list__item--deprecated {
-  background-color: #f78c8c;
-}
-
-.task-list__checkbox {
-  margin: 0;
-}
-
-.task-list__details {
-  flex-grow: 1;
-  margin-left: 10px;
-}
-
-.task-list__title {
-  font-weight: bold;
-}
-
-.task-list__date {
-  color: #888;
-}
-
-.task-list__actions {
-  display: flex;
-  gap: 10px;
-}
-
-.task-list__button {
-  padding: 5px 10px;
-  background-color: #6777ef;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #5563d4;
+.task-list {
+  &__item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f4f4f4;
+    border-radius: 4px;
+    cursor: pointer;
+    &--deprecated {
+      background-color: #f78c8c;
+    }
+  }
+  &__checkbox {
+    margin: 0;
+  }
+  &__details {
+    flex-grow: 1;
+    margin-left: 10px;
+  }
+  &__title {
+    font-weight: bold;
+    &--completed {
+      text-decoration: line-through;
+    }
+  }
+  &__date {
+    color: #888;
+  }
+  &__actions {
+    display: flex;
+    gap: 10px;
   }
 }
 </style>
