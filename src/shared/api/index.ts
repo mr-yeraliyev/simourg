@@ -10,7 +10,7 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (value: InternalAxiosRequestConfig<any>): InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>> => {
     // Do something before request is sent
-    console.log('Request Interceptor:', value);
+    // console.log('Request Interceptor:', value);
     // You can add headers or do other modifications
     return value;
   },
@@ -24,12 +24,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => {
     // Any status code that lies within the range of 2xx causes this function to trigger
-    console.log('Response Interceptor:', response);
+    
     return response;
   },
   (error) => {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
-    console.log('Response Interceptor Error:', error);
+    // console.log('Response Interceptor Error:', error);
     return Promise.reject(error);
   }
 );

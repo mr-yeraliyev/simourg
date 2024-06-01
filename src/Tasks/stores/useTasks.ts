@@ -1,27 +1,51 @@
-
 import { defineStore } from 'pinia'
-import { TaskActions, TaskGetters, TaskState, TaskStoreName, Task } from '../types'
-import { getTasks } from '../api'
+import {
+  TaskActions,
+  TaskGetters,
+  TaskState,
+  TaskStoreName,
+  Task,
+} from '../types'
+import { deleteSingleTask, getTasks, putSingleTask, postNewTask } from '../api'
 
-
-const useTasks = defineStore<TaskStoreName, TaskState, TaskGetters, TaskActions>('useTasks', {
+const useTasks = defineStore<
+  TaskStoreName,
+  TaskState,
+  TaskGetters,
+  TaskActions
+>('useTasks', {
   actions: {
     async fetchTasks() {
-        console.log('render fetchTasks method');
-        
-        await getTasks()
-
+      const { data } = await getTasks()
+      data && this.setTasks(data)
     },
+    async addTask(newTask: Omit<Task, 'id'>) {
+      const { status } = await postNewTask(newTask)
+      status && this.fetchTasks()
+    },
+    async deleteTask(taskId: string) {
+      const { status } = await deleteSingleTask(taskId)
+      status && this.fetchTasks()
+    },
+    async editTask(task: Task) {
+      const { status } = await putSingleTask(task)
+      status && this.fetchTasks()
+    },
+
     setTasks(tasks: Task[]) {
-        this.tasks = tasks
-    }
+      this.tasks = [...tasks]
+    },
+    setSingleTask(task: Task | null) {
+      this.singleTask = task ? { ...task } : null
+    },
   },
 
-  state () {
+  state() {
     return {
-      tasks: []
+      tasks: [],
+      singleTask: null,
     }
-  }
+  },
 })
 
 export default useTasks
