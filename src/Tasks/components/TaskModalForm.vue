@@ -52,8 +52,9 @@
 
 <script setup lang="ts">
 import { defineEmits, onMounted, ref } from 'vue'
-import { useTasks } from '../stores'
 import { storeToRefs } from 'pinia'
+
+import { useTasks } from '../stores'
 import { Task } from '../types'
 
 import CustomButton from '../../shared/components/CustomButton.vue'
