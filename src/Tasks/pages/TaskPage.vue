@@ -225,6 +225,8 @@ const states: State[] = [
 }
 
 .state-rect {
-  transition: all 0.3s ease;
+  transition-property: d, height, y;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
 }
 </style>

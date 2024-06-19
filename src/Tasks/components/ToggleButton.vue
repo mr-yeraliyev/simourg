@@ -38,6 +38,8 @@ const height = computed(() => (props.state === 2 || props.state === 3 ? 6 : 20))
 
 <style scoped>
 .state-rect {
-  transition: all 0.3s ease;
+  transition-property: x, height, y, width;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
 }
 </style>
