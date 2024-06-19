@@ -1,20 +1,88 @@
 <template>
-  <div>
-    <TasksList />
+  <div class="custom-component">
+    <SvgContainer
+      :y="state < 2 ? 19 : 8"
+      :height="state < 2 ? 40 : 62"
+      :d1="vectors[state].d1"
+      :d2="vectors[state].d2"
+      :d3="vectors[state].d3"
+    >
+      <component :is="currentSvgContent" :key="state" />
+    </SvgContainer>
+
+    <ToggleButton :state="state" class="toggle-button" @click="changeState" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useTasks } from '../stores'
+import { ref, computed } from 'vue'
+import ToggleButton from '../components/ToggleButton.vue'
+import SvgContainer from '../components/SvgContainer.vue'
 
-import TasksList from '../components/TasksList.vue'
+import FourthSvgContent from '../components/FourthSvgContent.vue'
+import ThirdSvgContent from '../components/ThirdSvgContent.vue'
+import SecondSvgContent from '../components/SecondSvgContent.vue'
+import FirstSvgContent from '../components/FirstSvgContent.vue'
 
-const store = useTasks()
+const state = ref(0)
 
-onMounted(() => {
-  store.fetchTasks()
+interface VectorPath {
+  d1: string
+  d2: string
+  d3: string
+}
+
+const changeState = () => {
+  state.value === 3 ? (state.value = 0) : state.value++
+}
+
+const currentSvgContent = computed(() => {
+  switch (state.value) {
+    case 0:
+      return FirstSvgContent
+    case 1:
+      return SecondSvgContent
+    case 2:
+      return ThirdSvgContent
+    case 3:
+      return FourthSvgContent
+  }
 })
+
+const vectors: VectorPath[] = [
+  {
+    d1: 'M133.333 59.5C133.333 60.9728 134.527 62.1667 136 62.1667C137.473 62.1667 138.667 60.9728 138.667 59.5C138.667 58.0272 137.473 56.8333 136 56.8333C134.527 56.8333 133.333 58.0272 133.333 59.5ZM135.5 78V78.5H136.5V78H135.5ZM135.5 59.5V78H136.5V59.5H135.5Z',
+    d2: 'M84.3333 51C84.3333 52.4728 85.5272 53.6667 87 53.6667C88.4728 53.6667 89.6667 52.4728 89.6667 51C89.6667 49.5272 88.4728 48.3333 87 48.3333C85.5272 48.3333 84.3333 49.5272 84.3333 51ZM86.5 78L86.5 78.5L87.5 78.5L87.5 78L86.5 78ZM86.5 51L86.5 78L87.5 78L87.5 51L86.5 51Z',
+    d3: 'M29.3333 50.5C29.3333 51.9728 30.5272 53.1667 32 53.1667C33.4728 53.1667 34.6667 51.9728 34.6667 50.5C34.6667 49.0272 33.4728 47.8333 32 47.8333C30.5272 47.8333 29.3333 49.0272 29.3333 50.5ZM31.5 50.5L31.5 78L32.5 78L32.5 50.5L31.5 50.5Z',
+  },
+  {
+    d1: 'M81.3333 51C81.3333 52.4728 82.5272 53.6667 84 53.6667C85.4728 53.6667 86.6667 52.4728 86.6667 51C86.6667 49.5272 85.4728 48.3333 84 48.3333C82.5272 48.3333 81.3333 49.5272 81.3333 51ZM83.5 78V78.5H84.5V78H83.5ZM83.5 51V78H84.5V51H83.5Z',
+    d2: 'M133.333 51C133.333 52.4728 134.527 53.6667 136 53.6667C137.473 53.6667 138.667 52.4728 138.667 51C138.667 49.5272 137.473 48.3333 136 48.3333C134.527 48.3333 133.333 49.5272 133.333 51ZM135.5 78V78.5H136.5V78H135.5ZM135.5 51V78H136.5V51H135.5Z',
+    d3: 'M29.3333 59C29.3333 60.4728 30.5272 61.6667 32 61.6667C33.4728 61.6667 34.6667 60.4728 34.6667 59C34.6667 57.5272 33.4728 56.3333 32 56.3333C30.5272 56.3333 29.3333 57.5272 29.3333 59ZM31.5 59L31.5 78L32.5 78L32.5 59L31.5 59Z',
+  },
+  {
+    d1: 'M27.3333 39C27.3333 40.4728 28.5272 41.6667 30 41.6667C31.4728 41.6667 32.6667 40.4728 32.6667 39C32.6667 37.5272 31.4728 36.3333 30 36.3333C28.5272 36.3333 27.3333 37.5272 27.3333 39ZM29.5 39V58.5H30.5V39H29.5ZM29.5 58.5V78H30.5V58.5H29.5Z',
+    d2: 'M81.3333 63C81.3333 64.4728 82.5272 65.6667 84 65.6667C85.4728 65.6667 86.6667 64.4728 86.6667 63C86.6667 61.5272 85.4728 60.3333 84 60.3333C82.5272 60.3333 81.3333 61.5272 81.3333 63ZM83.5 78L83.5 78.5L84.5 78.5L84.5 78L83.5 78ZM83.5 63L83.5 78L84.5 78L84.5 63L83.5 63Z',
+    d3: 'M133.333 70C133.333 71.4728 134.527 72.6667 136 72.6667C137.473 72.6667 138.667 71.4728 138.667 70C138.667 68.5272 137.473 67.3333 136 67.3333C134.527 67.3333 133.333 68.5272 133.333 70ZM135.5 78V78.5H136.5V78H135.5ZM135.5 70V78H136.5V70H135.5Z',
+  },
+  {
+    d1: 'M81.3333 62C81.3333 63.4728 82.5272 64.6667 84 64.6667C85.4728 64.6667 86.6667 63.4728 86.6667 62C86.6667 60.5272 85.4728 59.3333 84 59.3333C82.5272 59.3333 81.3333 60.5272 81.3333 62ZM83.5 78L83.5 78.5L84.5 78.5L84.5 78L83.5 78ZM83.5 62L83.5 78L84.5 78L84.5 62L83.5 62Z',
+    d2: 'M29.0326 39.8823C29.0326 41.3551 30.2265 42.549 31.6992 42.549C33.172 42.549 34.3659 41.3551 34.3659 39.8823C34.3659 38.4096 33.172 37.2157 31.6992 37.2157C30.2265 37.2157 29.0326 38.4096 29.0326 39.8823ZM31.1992 39.8823L31.1992 77.5H32.1992L32.1992 39.8823L31.1992 39.8823Z',
+    d3: 'M133.333 70C133.333 71.4728 134.527 72.6667 136 72.6667C137.473 72.6667 138.667 71.4728 138.667 70C138.667 68.5272 137.473 67.3333 136 67.3333C134.527 67.3333 133.333 68.5272 133.333 70ZM135.5 78V78.5H136.5V78H135.5ZM135.5 70V78H136.5V70H135.5Z',
+  },
+]
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.custom-component {
+  position: relative;
+  width: fit-content;
+  height: 100%;
+}
+
+.toggle-button {
+  position: absolute;
+  bottom: 13px;
+  right: 11px;
+}
+</style>
