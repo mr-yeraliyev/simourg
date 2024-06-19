@@ -28,6 +28,26 @@
       stroke-linejoin="round"
       class="state-rect"
     />
+    <mask id="path-4-inside-1_11034_154093" fill="white">
+      <path
+        d="M40 38.5H160V61.5C160 62.0523 159.552 62.5 159 62.5H41C40.4477 62.5 40 62.0523 40 61.5V38.5Z"
+      />
+    </mask>
+    <mask id="path-4-inside-1_11034_154073" fill="white">
+      <path
+        d="M109 27H158C158.552 27 159 27.4477 159 28V50C159 50.5523 158.552 51 158 51H109V27Z"
+      />
+    </mask>
+    <mask id="path-3-inside-1_11034_154035" fill="white">
+      <path
+        d="M20 28C20 27.4477 20.4477 27 21 27H70V51H21C20.4477 51 20 50.5523 20 50V28Z"
+      />
+    </mask>
+    <mask id="path-3-inside-1_11034_154054" fill="white">
+      <path
+        d="M20 16.5C20 15.9477 20.4477 15.5 21 15.5H159C159.552 15.5 160 15.9477 160 16.5V38.5C160 39.0523 159.552 39.5 159 39.5H21C20.4477 39.5 20 39.0523 20 38.5V16.5Z"
+      />
+    </mask>
     <slot />
 
     <path :d="d1" fill="#CED1D9" class="state-rect" />
