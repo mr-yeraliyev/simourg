@@ -2,7 +2,7 @@
   <span>
     <span class="container">
       <div class="outer-rect">
-        <div :style="innerRectStyle" class="inner-rect" />
+        <div v-show="state < 4" :style="innerRectStyle" class="inner-rect" />
       </div>
     </span>
   </span>
@@ -49,7 +49,7 @@ const innerRectStyle = computed(() => ({
 
 .inner-rect {
   position: absolute;
-  transition-property: height width top left;
+  transition-property: height width top left display;
   transition-duration: 0.4s;
   transition-timing-function: ease;
 }

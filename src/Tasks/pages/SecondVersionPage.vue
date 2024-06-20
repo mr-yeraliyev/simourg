@@ -7,7 +7,7 @@
     <div class="values">
       <div :style="currentState.values_1" class="values_1">
         <div :style="currentState.vector_1" class="vector" />
-        <input type="number" />
+        <input type="number" :disabled="state === 4" />
       </div>
       <div :style="currentState.values_2" class="values_2">
         <div :style="currentState.vector_2" class="vector" />
@@ -26,21 +26,22 @@
 import { ref, computed, StyleValue } from 'vue'
 import ToggleButton from '../components/ToggleButton.vue'
 
-interface State {
-  inputGroup: StyleValue
-  inputLabel: StyleValue
-  inputField: StyleValue
-  values_1: StyleValue
-  values_2: StyleValue
-  values_3: StyleValue
-  vector_1: StyleValue
-  vector_2: StyleValue
-  vector_3: StyleValue
-}
+type Elements =
+  | 'inputGroup'
+  | 'inputLabel'
+  | 'inputField'
+  | 'values_1'
+  | 'values_2'
+  | 'values_3'
+  | 'vector_1'
+  | 'vector_2'
+  | 'vector_3'
+
+type State = Record<Elements, StyleValue>
 
 const state = ref(0)
 const changeState = () => {
-  state.value = (state.value + 1) % 4
+  state.value = (state.value + 1) % 5
 }
 
 const states: Record<string, State> = {
@@ -87,6 +88,21 @@ const states: Record<string, State> = {
     vector_1: { height: '32px' },
     vector_2: { height: '56px' },
     vector_3: { height: '26px' },
+  },
+  state_5: {
+    inputGroup: { height: '40px' },
+    inputLabel: {
+      width: '65%',
+      transform: 'translate(34.5%, 120%)',
+      display: 'none',
+    },
+    inputField: { width: '79.5%', transform: 'translate(10%, 27%)' },
+    values_1: { transform: 'translate(130%, 0)' },
+    values_2: { transform: 'translate(0, 0)' },
+    values_3: { transform: 'translate(260%, 0)' },
+    vector_1: { height: '32px', display: 'none' },
+    vector_2: { height: '56px' },
+    vector_3: { height: '47px' },
   },
 }
 
@@ -187,5 +203,8 @@ input {
   height: 100%;
   border: 1px solid #ced1d9;
   border-radius: 5px;
+  &:disabled {
+    background-color: gray;
+  }
 }
 </style>
